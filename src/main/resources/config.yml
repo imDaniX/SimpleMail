@@ -1,0 +1,19 @@
+# Delete old messages after N days
+mails-timeout: 30
+# Format for output date
+date-format: 'dd.MM.yy HH:mm'
+# Notify players about their mails every N minutes
+notify-timer: 5
+messages:
+  new-mails: '&6У Вас &c%mails%&6 новых сообщенй. Введите &c/mail read&6, чтобы прочесть.'
+  no-mails: '&6У Вас нет новых сообщений.'
+  read-mails: '&6У Вас &c%mails%&6 новых сообщенй. Введите &c/mail clear&6, чтобы удалить.'
+  clear-mails: '&6%mails% сообщений было удалено.'
+  send-mails-args: '&cНедостаточно аргументов. &f/mail send <игрок> <сообщение>'
+  send-mails: '&6Сообщение отослано &c%receiver%&6:&f %message%'
+  mail: '&7(%date%) &6[&f%sender%&6]:&f %message%'
+  help: |-
+    &c/mail read&6 - Прочесть свою почту.
+    &c/mail clear&6 - Удалить письма на почте.
+    &c/mail send <игрок> <сообщение>&6 - Отослать игроку письмо.
+    &c/mail help&6 - Просмотреть это сообщение.

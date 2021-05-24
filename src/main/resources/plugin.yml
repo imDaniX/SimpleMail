@@ -1,0 +1,12 @@
+name: SimpleMail
+version: ${project.version}
+main: me.imdanix.mail.SimpleMail
+api-version: 1.13
+authors: [imDaniX]
+description: Just for mail
+commands:
+  simplemail:
+    aliases: [mail]
+    usage: /{command} (read|clear|send <player> <message>)
+    description: Basic mail command.
+    permission: simplemail.command
