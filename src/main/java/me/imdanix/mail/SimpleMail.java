@@ -49,7 +49,9 @@ public final class SimpleMail extends JavaPlugin implements Listener {
         dateFormat = new SimpleDateFormat(config.getString("messages.date-format", "dd.MM.yy HH:mm"));
         if (notifier != null) notifier.cancel();
         int ticks = config.getInt("notify-timer", 5) * 1200;
-        notifier = Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(this::mailNotify), ticks, ticks);
+        notifier = ticks > 0 ?
+                   Bukkit.getScheduler().runTaskTimer(this, () -> Bukkit.getOnlinePlayers().forEach(this::mailNotify), ticks, ticks) :
+                   null;
     }
 
     @EventHandler
@@ -83,7 +85,7 @@ public final class SimpleMail extends JavaPlugin implements Listener {
         if (sender instanceof Player) {
             playerMail((Player) sender, args);
         } else {
-            sender.sendMessage(ChatColor.RED + "This command can be executed only by player!");
+            sender.sendMessage(ChatColor.RED + "This command can be executed only by player!"); // TODO Allow
         }
         return true;
     }
