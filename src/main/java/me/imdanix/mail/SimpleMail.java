@@ -68,7 +68,7 @@ public final class SimpleMail extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        mails.remove(event.getPlayer().getUniqueId().toString());
+        mails.remove(getKey(event.getPlayer()));
     }
 
     private void mailNotify(Player player) {
