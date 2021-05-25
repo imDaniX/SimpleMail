@@ -36,6 +36,7 @@ public class Database {
         }
     }
 
+    // TODO Scheduled clear?
     private void clear(long days) throws SQLException {
         if (days == -1) return;
         long minTime = System.currentTimeMillis() - days * DAYS_TO_MS;
@@ -72,6 +73,17 @@ public class Database {
         }
     }
 
+    public void removeMails(String receiver) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM `mails` WHERE `receiver` = ?;");
+            statement.setString(1, receiver.toLowerCase(Locale.ENGLISH));
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unused")
     public void removeMail(String receiver, String sender, long timestamp) {
         try {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM `mails` WHERE `receiver` = ? AND `sender` = ? AND `timestamp` = ?;");

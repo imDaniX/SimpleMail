@@ -120,11 +120,7 @@ public final class SimpleMail extends JavaPlugin implements Listener {
                 String name = getKey(player);
                 List<Mail> mails = this.mails.remove(name);
                 this.mails.put(name, new ArrayList<>());
-                Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-                    for (Mail mail : mails) {
-                        database.removeMail(name, mail.getSender(), mail.getTimestamp().getTime());
-                    }
-                });
+                Bukkit.getScheduler().runTaskAsynchronously(this, () -> database.removeMails(name));
                 player.sendMessage(Message.CLEAR_MAILS.get().replace("%mails%", Integer.toString(mails.size())));
                 return;
             }
