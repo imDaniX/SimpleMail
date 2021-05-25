@@ -3,7 +3,7 @@ version: ${project.version}
 main: me.imdanix.mail.SimpleMail
 api-version: 1.13
 authors: [imDaniX]
-description: Just for mail
+description: ${project.description}
 commands:
   simplemail:
     aliases: [mail]
