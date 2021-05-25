@@ -46,7 +46,7 @@ public final class SimpleMail extends JavaPlugin implements Listener {
         reloadConfig();
         FileConfiguration config = getConfig();
         Message.reload(config.isConfigurationSection("messages") ? config.getConfigurationSection("messages") : config.createSection("messages"));
-        dateFormat = new SimpleDateFormat(config.getString("messages.date-format", "dd.MM.yy HH:mm"));
+        dateFormat = new SimpleDateFormat(config.getString("date-format", "dd.MM.yy HH:mm"));
         if (notifier != null) notifier.cancel();
         int ticks = config.getInt("notify-timer", 5) * 1200;
         notifier = ticks > 0 ?
