@@ -107,6 +107,7 @@ public final class SimpleMail extends JavaPlugin implements Listener {
                     player.sendMessage(Message.NO_MAILS.get());
                     return;
                 }
+                player.sendMessage(Message.READ_MAILS.get().replace("%mails%", Integer.toString(mails.size())));
                 for (Mail mail : mails) {
                     player.sendMessage(Message.MAIL.get()
                             .replace("%sender%", mail.getSender())
@@ -144,6 +145,7 @@ public final class SimpleMail extends JavaPlugin implements Listener {
                     mails.get(receiver).add(mail);
                     mailNotify(getOnline(receiver));
                 }
+                player.sendMessage(Message.SEND_MAILS.get().replace("%receiver%", args[1]).replace("%message%", message));
                 Bukkit.getScheduler().runTaskAsynchronously(this, () -> database.addMail(args[1], mail));
                 return;
             }

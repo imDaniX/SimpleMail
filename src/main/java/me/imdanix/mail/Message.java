@@ -25,6 +25,11 @@ public enum Message {
         return message;
     }
 
+    /*
+    TODO
+    public String get(String... placeholders);
+     */
+
     public static void reload(ConfigurationSection cfg) {
         for (Message msg : Message.values()) {
             msg.message = ChatColor.translateAlternateColorCodes('&',
