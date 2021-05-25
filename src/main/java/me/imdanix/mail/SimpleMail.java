@@ -74,6 +74,7 @@ public final class SimpleMail extends JavaPlugin implements Listener {
     }
 
     private void mailNotify(Player player) {
+        if (!player.hasPermission("simplemail.command")) return;
         List<Mail> mails = this.mails.get(getKey(player));
         if (mails != null && mails.size() > 0) {
             player.sendMessage(Message.NEW_MAILS.get().replace("%mails%", Integer.toString(mails.size())));
