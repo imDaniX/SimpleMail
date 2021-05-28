@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public final class SimpleMail extends JavaPlugin implements Listener {
@@ -141,13 +142,15 @@ public final class SimpleMail extends JavaPlugin implements Listener {
                         message,
                         System.currentTimeMillis()
                 );
+                Bukkit.getScheduler().runTaskAsynchronously(this, () -> database.addMail(args[1], mail));
+                player.sendMessage(Message.SEND_MAILS.get().replace("%receiver%", args[1]).replace("%message%", message));
+
                 String receiver = args[1].toLowerCase(Locale.ENGLISH);
                 if (mails.containsKey(receiver)) {
                     mails.get(receiver).add(mail);
-                    mailNotify(getOnline(receiver));
+                    // Expecting it to be non-null
+                    mailNotify(Objects.requireNonNull(Bukkit.getPlayerExact(receiver)));
                 }
-                player.sendMessage(Message.SEND_MAILS.get().replace("%receiver%", args[1]).replace("%message%", message));
-                Bukkit.getScheduler().runTaskAsynchronously(this, () -> database.addMail(args[1], mail));
                 return;
             }
 
@@ -171,12 +174,5 @@ public final class SimpleMail extends JavaPlugin implements Listener {
         } else {
             return Collections.emptyList();
         }
-    }
-
-    private static Player getOnline(String name) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getName().equalsIgnoreCase(name)) return player;
-        }
-        return null;
     }
 }
