@@ -19,7 +19,7 @@ public class Database {
     private Connection connection;
 
     public Database(Plugin plugin, int clear) {
-        plugin.getDataFolder().mkdir();
+        plugin.getDataFolder().mkdirs();
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" + plugin.getDataFolder() + File.separator + "mails.db");
@@ -30,6 +30,7 @@ public class Database {
                     "`message` VARCHAR NOT NULL," +
                     "`timestamp` INTEGER NOT NULL" +
             ");");
+            statement.close();
             clear(clear);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -37,18 +38,20 @@ public class Database {
     }
 
     // TODO Scheduled clear?
-    private void clear(long days) throws SQLException {
+    private void clear(long days) {
         if (days == -1) return;
         long minTime = System.currentTimeMillis() - days * DAYS_TO_MS;
-        PreparedStatement statement = connection.prepareStatement("DELETE FROM `mails` WHERE `timestamp` < ?;");
-        statement.setLong(1, minTime);
-        statement.executeUpdate();
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM `mails` WHERE `timestamp` < ?;")) {
+            statement.setLong(1, minTime);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<Mail> getMails(String receiver) {
         List<Mail> messages = new ArrayList<>();
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `mails` WHERE `receiver` = ?;");
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM `mails` WHERE `receiver` = ?;")) {
             statement.setString(1, receiver.toLowerCase(Locale.ENGLISH));
             ResultSet result = statement.executeQuery();
             while (result.next()) {
@@ -61,8 +64,7 @@ public class Database {
     }
 
     public void addMail(String receiver, Mail message) {
-        try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO `mails` (receiver,sender,message,timestamp) VALUES (?,?,?,?);");
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO `mails` (receiver,sender,message,timestamp) VALUES (?,?,?,?);")) {
             statement.setString(1, receiver.toLowerCase(Locale.ENGLISH));
             statement.setString(2, message.getSender());
             statement.setString(3, message.getMessage());
@@ -74,8 +76,7 @@ public class Database {
     }
 
     public void removeMails(String receiver) {
-        try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM `mails` WHERE `receiver` = ?;");
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM `mails` WHERE `receiver` = ?;")) {
             statement.setString(1, receiver.toLowerCase(Locale.ENGLISH));
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -85,8 +86,7 @@ public class Database {
 
     @SuppressWarnings("unused")
     public void removeMail(String receiver, String sender, long timestamp) {
-        try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM `mails` WHERE `receiver` = ? AND `sender` = ? AND `timestamp` = ?;");
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM `mails` WHERE `receiver` = ? AND `sender` = ? AND `timestamp` = ?;")) {
             statement.setString(1, receiver.toLowerCase(Locale.ENGLISH));
             statement.setString(2, sender);
             statement.setLong(3, timestamp);
